@@ -1,0 +1,62 @@
+000.项目下的任务查询条件显示错误
+	1.修改wens/task/project/TaskList.jsp中的select元素，由函数生成变为手动添加选择项
+
+001.解决从主页直接打开某任务后，新建子任务按钮无效的问题
+	1.修改task/taskInfos.jsp 增加函数addSubTask()（其实是将该函数从TaskMainFrame.jsp挪了过来）
+		修改事件响应，以前是从父框架中调用该函数，现在则直接调用
+
+002.解决任务管理栏中子任务显示不完整的情况
+	1.此问题是由于修改007时代码写错了导致的，使用RecordSet不恰当导致
+	   获取执行人部门名称时由从数据库查询改为使用DepartmentComInfo类（部门信息缓存类）直接查询
+    2.一开始还以为是原来的代码错误的使用了 Oracle中的ROWNUM，其实不是（ROWNUM不能使用 ROWNUM > n(n>0) || ROWNUM >= (n>1) || ROWNUM = n(n!=1))
+
+004.任务管理代理负责人编辑负责的任务失败
+	1.修改task/taskInfos.jsp
+		添加负责人权限的编辑功能
+		解决出现两个 “编辑任务” 的bug
+	2.修改task/taskEdit.jsp
+		解决权限控制 添加负责人权限
+		
+007.子任务列表任务执行人没有显示部门名称
+	1.修改wens/task/SubtaskData.jsp
+		获取执行人部门名称
+010.任务时间进度存在负数的错误
+	1.修改wens/task/project/TaskList.jsp
+		加入小于0则全部设置为0的判断
+016.任务拒绝流程错误
+	1.修改task/taskInfos.jsp
+	if(!taskStatus.equals(bfu.getSelectValueBySelectName("进行中", "7137"))) {//只是把原条件变为否
+		if(operationLevel == 0 || operationLevel == 1) {
+			<input id="disaTask" name="taskInfo" type="button" class="e8_btn_top" onclick="javascript:disallow();" value="拒受任务"></input>
+		}
+	}
+	
+017.任务管理 相关交流 -> 讨论与反馈
+
+018.任务管理下的文件上传
+	1.修改task/taskInfos.jsp，添加文件上传内容
+	2.修改wens/task/project/Taskinfos.jsp 和 wens/task/project/ProjectInfos.jsp 更改文件上传权限
+	  修改为项目/任务 的创建者 、负责人、代理负责人、参与者/执行者 都可以上传修改文件
+
+019.任务管理任务详情显示 时间进度
+	1.计算方式如下
+		判断当前日期now 与 开始日期 start 和 结束日期 end
+		    now <= start => 0
+			now >= end   => 100
+			(now - start)/(end - start + 1) => timeschedule
+			
+020.增加一个未下达的任务的删除
+	1.将task/TaskInfo.jsp任务权限控制的逻辑重新写了一遍
+
+021.新建项目必填项校验
+	1.必填项必须填写才能提交，源代码中doSave()函数if判断后少写了个else
+
+022.任务类型删除后显示404界面
+	1.搜索form的action地址写错了
+	
+023.修改project目录下的TaskInfos.jsp以控制任务操作权限
+	1.还是在switch case语句下修改，这次不是在html中写if，而是在js中，因为它要修改的是父界面
+	
+024.任务管理全部页面更新后的刷新
+		1.使用location.reload()或直接location.href="URL"
+
